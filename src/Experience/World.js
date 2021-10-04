@@ -1,10 +1,10 @@
-import * as THREE from 'three';
-import Experience from './Experience.js';
+import * as THREE from "three";
+import Experience from "./Experience.js";
 
-import Char from './char.js';
-import Companion from './companion.js';
+import Char from "./char.js";
+import Companion from "./companion.js";
 
-import Physics from './physics.js';
+import Physics from "./physics.js";
 
 export default class World {
   constructor(_options) {
@@ -14,9 +14,9 @@ export default class World {
     this.resources = this.experience.resources;
     this.time = this.experience.time;
 
-    this.resources.on('groupEnd', (_group) => {
+    this.resources.on("groupEnd", (_group) => {
       this.physics = new Physics(this.time, this.resources);
-      if (_group.name === 'base') {
+      if (_group.name === "base") {
         this.setDummy();
       }
 
@@ -46,6 +46,9 @@ export default class World {
     this.resources.items.constructionTexture.flipY = false;
     this.resources.items.floorTexture.flipY = false;
     this.resources.items.grassTexture.flipY = false;
+    this.resources.items.grassTexture.anisotropy = 0;
+    // this.resources.items.grassTexture.magFilter = THREE.NearestFilter;
+    // this.resources.items.grassTexture.minFilter = THREE.NearestFilter;
 
     const dinerMaterial = new THREE.MeshBasicMaterial({
       map: this.resources.items.dinerTexture,
@@ -64,12 +67,16 @@ export default class World {
     });
 
     const grassMaterial = new THREE.MeshBasicMaterial({
-      color: '#53a113',
+      color: "#53a113",
       map: this.resources.items.grassTexture,
       transparent: true,
       side: THREE.DoubleSide,
       depthWrite: false,
     });
+
+    grassMaterial.blending = THREE.CustomBlending;
+    grassMaterial.blendSrc = THREE.OneFactor;
+    grassMaterial.blendDst = THREE.OneMinusSrcAlphaFactor;
 
     diner.traverse((child) => {
       child.material = dinerMaterial;
@@ -91,7 +98,7 @@ export default class World {
       child.material = grassMaterial;
     });
 
-    console.log('grass', this.resources.items.grassTexture);
+    console.log("grass", this.resources.items.grassTexture);
 
     console.log(floor);
     floor.rotation.y = Math.PI / 2;

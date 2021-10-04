@@ -1,15 +1,15 @@
-import * as THREE from 'three';
-import gsap from 'gsap';
-import Time from './Utils/Time.js';
-import Sizes from './Utils/Sizes.js';
-import Stats from './Utils/Stats.js';
+import * as THREE from "three";
+import gsap from "gsap";
+import Time from "./Utils/Time.js";
+import Sizes from "./Utils/Sizes.js";
+import Stats from "./Utils/Stats.js";
 
-import Resources from './Resources.js';
-import Renderer from './Renderer.js';
-import Camera from './Camera.js';
-import World from './World.js';
+import Resources from "./Resources.js";
+import Renderer from "./Renderer.js";
+import Camera from "./Camera.js";
+import World from "./World.js";
 
-import assets from './assets.js';
+import assets from "./assets.js";
 
 export default class Experience {
   static instance;
@@ -38,7 +38,7 @@ export default class Experience {
     this.setResources();
     this.setWorld();
 
-    this.sizes.on('resize', () => {
+    this.sizes.on("resize", () => {
       this.resize();
     });
 
@@ -65,7 +65,8 @@ export default class Experience {
   }
 
   cameraFollow() {
-    this.time.on('tick', () => {
+    this.time.on("tick", () => {
+      // this.stats.begin();
       if (this.world.char) {
         const characterDetails = this.world.char;
         gsap.to(this.cameraCoords, {
@@ -107,6 +108,7 @@ export default class Experience {
         this.cameraCoords.y,
         this.cameraCoords.z
       );
+      // this.stats.end();
     });
   }
 
@@ -114,7 +116,8 @@ export default class Experience {
     this.config = {};
 
     // Debug
-    this.config.debug = window.location.hash === '#debug';
+    // this.config.debug = window.location.hash === "#debug";
+    this.config.debug = true;
 
     // Pixel ratio
     this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2);

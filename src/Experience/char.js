@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import gsap from 'gsap';
+import * as THREE from "three";
+import gsap from "gsap";
 
 export default class Character {
   constructor(resources, physics, time) {
@@ -11,7 +11,7 @@ export default class Character {
     this.keysPressed = {};
 
     this.playerMoveSpeed = 0.5;
-    this.maxPlayerMoveSpeed = 1;
+    this.maxPlayerMoveSpeed = 1.5;
 
     this.playerDirection = Math.PI / 2;
 
@@ -26,7 +26,7 @@ export default class Character {
   }
 
   updateFrame() {
-    this.time.on('tick', () => {
+    this.time.on("tick", () => {
       this.move();
 
       if (this.mixer) {
@@ -110,12 +110,12 @@ export default class Character {
       if (child.material) {
         // console.log(child.material);
         child.material.metalness = 0;
-        if (child.material.name === 'Main') {
-          child.material.color = new THREE.Color('#DFA33E');
-        } else if (child.material.name === 'Grey') {
-          child.material.color = new THREE.Color('#B6B5AD');
-        } else if (child.material.name === 'Black') {
-          child.material.color = new THREE.Color('#444444');
+        if (child.material.name === "Main") {
+          child.material.color = new THREE.Color("#DFA33E");
+        } else if (child.material.name === "Grey") {
+          child.material.color = new THREE.Color("#B6B5AD");
+        } else if (child.material.name === "Black") {
+          child.material.color = new THREE.Color("#444444");
         }
       }
     });
@@ -138,34 +138,34 @@ export default class Character {
   }
 
   eventListeners() {
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener("keydown", (e) => {
       this.keysPressed[e.code] = true;
       this.updateDirection();
       this.animationController();
 
-      if (e.code === 'Space') {
+      if (e.code === "Space") {
         this.jump();
       }
     });
 
-    window.addEventListener('keyup', (e) => {
+    window.addEventListener("keyup", (e) => {
       delete this.keysPressed[e.code];
       this.updateDirection();
       this.animationController();
     });
 
-    window.addEventListener('click', () => {
-      console.log('punch');
+    window.addEventListener("click", () => {
+      console.log("punch");
       this.punch();
     });
   }
 
   animationController(key) {
     if (
-      this.keysPressed['KeyW'] ||
-      this.keysPressed['KeyA'] ||
-      this.keysPressed['KeyS'] ||
-      this.keysPressed['KeyD']
+      this.keysPressed["KeyW"] ||
+      this.keysPressed["KeyA"] ||
+      this.keysPressed["KeyS"] ||
+      this.keysPressed["KeyD"]
     ) {
       gsap.to(this.walkAnimation, { weight: 1, duration: 1 });
       gsap.to(this.idleAnimation, { weight: 0, duration: 1 });
@@ -200,22 +200,22 @@ export default class Character {
 
     this.positionHistory = this.model.position;
 
-    if (this.keysPressed['KeyA']) {
+    if (this.keysPressed["KeyA"]) {
       playerVelocity.z >= this.maxPlayerMoveSpeed
         ? (playerVelocity.z = this.maxPlayerMoveSpeed)
         : (playerVelocity.z += this.playerMoveSpeed);
     }
-    if (this.keysPressed['KeyD']) {
+    if (this.keysPressed["KeyD"]) {
       playerVelocity.z <= -this.maxPlayerMoveSpeed
         ? (playerVelocity.z = -this.maxPlayerMoveSpeed)
         : (playerVelocity.z -= this.playerMoveSpeed);
     }
-    if (this.keysPressed['KeyW']) {
+    if (this.keysPressed["KeyW"]) {
       playerVelocity.x <= -this.maxPlayerMoveSpeed
         ? (playerVelocity.x = -this.maxPlayerMoveSpeed)
         : (playerVelocity.x -= this.playerMoveSpeed);
     }
-    if (this.keysPressed['KeyS']) {
+    if (this.keysPressed["KeyS"]) {
       playerVelocity.x >= this.maxPlayerMoveSpeed
         ? (playerVelocity.x = this.maxPlayerMoveSpeed)
         : (playerVelocity.x += this.playerMoveSpeed);
@@ -223,18 +223,18 @@ export default class Character {
   }
 
   updateDirection() {
-    if (this.keysPressed['KeyW']) {
-      if (this.keysPressed['KeyA']) this.playerDirection = (Math.PI * 7) / 4;
-      else if (this.keysPressed['KeyD'])
+    if (this.keysPressed["KeyW"]) {
+      if (this.keysPressed["KeyA"]) this.playerDirection = (Math.PI * 7) / 4;
+      else if (this.keysPressed["KeyD"])
         this.playerDirection = (Math.PI * 5) / 4;
       else this.playerDirection = -Math.PI / 2;
-    } else if (this.keysPressed['KeyS']) {
-      if (this.keysPressed['KeyA']) this.playerDirection = Math.PI / 4;
-      else if (this.keysPressed['KeyD'])
+    } else if (this.keysPressed["KeyS"]) {
+      if (this.keysPressed["KeyA"]) this.playerDirection = Math.PI / 4;
+      else if (this.keysPressed["KeyD"])
         this.playerDirection = (Math.PI * 3) / 4;
       else this.playerDirection = Math.PI / 2;
-    } else if (this.keysPressed['KeyA']) this.playerDirection = 0;
-    else if (this.keysPressed['KeyD']) this.playerDirection = Math.PI;
+    } else if (this.keysPressed["KeyA"]) this.playerDirection = 0;
+    else if (this.keysPressed["KeyD"]) this.playerDirection = Math.PI;
 
     this.model.rotation.y = this.playerDirection;
     // gsap.to(this.model.rotation, { y: this.playerDirection, duration: 0.1 });
