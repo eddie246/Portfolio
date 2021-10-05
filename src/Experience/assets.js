@@ -25,7 +25,7 @@ export default [
       },
       {
         name: 'grassTexture',
-        source: '/assets/textures/grassTestTexture.png',
+        source: '/assets/textures/Grass.png',
         type: 'texture',
       },
       {
