@@ -29,6 +29,16 @@ export default [
         type: 'texture',
       },
       {
+        name: 'dandelionTexture',
+        source: '/assets/textures/Dandelion.png',
+        type: 'texture',
+      },
+      {
+        name: 'pFlowerTexture',
+        source: '/assets/textures/P_flower.png',
+        type: 'texture',
+      },
+      {
         name: 'floorTexture',
         source: '/assets/textures/Floor highres.jpg',
         type: 'texture',

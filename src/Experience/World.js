@@ -1,10 +1,11 @@
-import * as THREE from "three";
-import Experience from "./Experience.js";
+import * as THREE from 'three';
+import * as dat from 'dat.gui';
+import Experience from './Experience.js';
 
-import Char from "./char.js";
-import Companion from "./companion.js";
+import Char from './char.js';
+import Companion from './companion.js';
 
-import Physics from "./physics.js";
+import Physics from './physics.js';
 
 export default class World {
   constructor(_options) {
@@ -14,13 +15,16 @@ export default class World {
     this.resources = this.experience.resources;
     this.time = this.experience.time;
 
-    this.resources.on("groupEnd", (_group) => {
-      this.physics = new Physics(this.time, this.resources);
-      if (_group.name === "base") {
-        this.setDummy();
-      }
+    //DEBUG MENU ONLY
+    this.gui = new dat.GUI();
 
-      this.setLight();
+    this.resources.on('groupEnd', (_group) => {
+      this.physics = new Physics(this.time, this.resources);
+      if (_group.name === 'base') {
+        this.setDummy();
+
+        this.setLight();
+      }
     });
   }
 
@@ -46,9 +50,8 @@ export default class World {
     this.resources.items.constructionTexture.flipY = false;
     this.resources.items.floorTexture.flipY = false;
     this.resources.items.grassTexture.flipY = false;
-    this.resources.items.grassTexture.anisotropy = 0;
-    // this.resources.items.grassTexture.magFilter = THREE.NearestFilter;
-    // this.resources.items.grassTexture.minFilter = THREE.NearestFilter;
+    this.resources.items.dandelionTexture.flipY = false;
+    this.resources.items.pFlowerTexture.flipY = false;
 
     const dinerMaterial = new THREE.MeshBasicMaterial({
       map: this.resources.items.dinerTexture,
@@ -66,8 +69,8 @@ export default class World {
       map: this.resources.items.floorTexture,
     });
 
-    const grassMaterial = new THREE.MeshBasicMaterial({
-      color: "#53a113",
+    const grassMaterial = new THREE.MeshStandardMaterial({
+      color: '#53a113',
       map: this.resources.items.grassTexture,
       transparent: true,
       side: THREE.DoubleSide,
@@ -77,6 +80,28 @@ export default class World {
     grassMaterial.blending = THREE.CustomBlending;
     grassMaterial.blendSrc = THREE.OneFactor;
     grassMaterial.blendDst = THREE.OneMinusSrcAlphaFactor;
+
+    const dandelionMaterial = new THREE.MeshStandardMaterial({
+      // color: '#aaaaaa',
+      map: this.resources.items.dandelionTexture,
+      transparent: true,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      metalness: 0,
+    });
+
+    const pFlowerMaterial = new THREE.MeshStandardMaterial({
+      // color: '#aaaaaa',
+      map: this.resources.items.pFlowerTexture,
+      transparent: true,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      flatShading: true,
+    });
+
+    dandelionMaterial.blending = THREE.CustomBlending;
+    dandelionMaterial.blendSrc = THREE.OneFactor;
+    dandelionMaterial.blendDst = THREE.OneMinusSrcAlphaFactor;
 
     diner.traverse((child) => {
       child.material = dinerMaterial;
@@ -94,11 +119,20 @@ export default class World {
       child.material = floorMaterial;
     });
     grass.traverse((child) => {
-      console.log(child);
-      child.material = grassMaterial;
+      if (child.name[0] === 'G') {
+        child.material = grassMaterial;
+      } else if (child.name[0] === 'D') {
+        console.log(child);
+        child.material = dandelionMaterial;
+        console.log(child.material);
+      } else if (child.name[0] === 'P') {
+        child.material = pFlowerMaterial;
+      } else if (child.name[0] === 'T') {
+        console.log('text', child);
+        child.material.metalness = 0;
+        child.material.color = new THREE.Color('white');
+      }
     });
-
-    console.log("grass", this.resources.items.grassTexture);
 
     console.log(floor);
     floor.rotation.y = Math.PI / 2;
@@ -108,12 +142,29 @@ export default class World {
   }
 
   setLight() {
-    const ambientLight = new THREE.AmbientLight(0x404040, 3);
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
     this.scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0x404040, 2);
-    directionalLight.position.set(0, 30, 20);
-    console.log(directionalLight);
-    this.scene.add(directionalLight);
+
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1a381a, 1);
+    hemiLight.position.set(3, 6.25, 7);
+    this.scene.add(hemiLight);
+
+    // const directionalLight = new THREE.DirectionalLight(0x404040, 2);
+    // directionalLight.position.set(27.49, 38.32, 23.15);
+    // directionalLight.lookAt(new THREE.Vector3(0, -60, 20));
+    // this.scene.add(directionalLight);
+
+    this.parameters = { color: 0xffffff, groundColor: 0x2600 };
+    this.gui.add(hemiLight.position, 'x', -10, 10, 0.01).name('hemi x');
+    this.gui.add(hemiLight.position, 'y', -0, 10, 0.01).name('hemi y');
+    this.gui.add(hemiLight.position, 'z', -10, 10, 0.01).name('directional z');
+
+    this.gui
+      .addColor(this.parameters, 'color')
+      .onChange(() => hemiLight.color.set(this.parameters.color));
+    this.gui
+      .addColor(this.parameters, 'groundColor')
+      .onChange(() => hemiLight.groundColor.set(this.parameters.groundColor));
   }
 
   resize() {}

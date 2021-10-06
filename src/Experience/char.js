@@ -12,6 +12,7 @@ export default class Character {
 
     this.playerMoveSpeed = 0.5;
     this.maxPlayerMoveSpeed = 1.5;
+    console.log(this.time.delta, this.maxPlayerMoveSpeed);
 
     this.playerDirection = Math.PI / 2;
 
@@ -23,11 +24,27 @@ export default class Character {
     this.setCharacter();
     this.eventListeners();
     this.updateFrame();
+
+    // this.moveSpeedBasedOnRefreshrate();
   }
+
+  // moveSpeedBasedOnRefreshrate() {
+  //   window.setTimeout(() => {
+  //     const playerMoveSpeedFPS = 0.15 * this.time.delta;
+  //     if (playerMoveSpeedFPS >= 2.4 || playerMoveSpeedFPS <= 1) {
+  //       this.maxPlayerMoveSpeed = 1.5;
+  //       this.moveSpeedBasedOnRefreshrate();
+  //     } else {
+  //       this.maxPlayerMoveSpeed = playerMoveSpeedFPS;
+  //     }
+  //     console.log(this.maxPlayerMoveSpeed);
+  //   }, 1000);
+  // }
 
   updateFrame() {
     this.time.on('tick', () => {
       this.move();
+      this.maxPlayerMoveSpeed = 0.15 * this.time.delta;
 
       if (this.mixer) {
         this.mixer.update(this.time.delta / 800);

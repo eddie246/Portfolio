@@ -1,7 +1,7 @@
-import CANNON from "cannon";
-import * as THREE from "three";
+import CANNON from 'cannon';
+import * as THREE from 'three';
 
-import { threeToCannon, ShapeType } from "three-to-cannon";
+import { threeToCannon, ShapeType } from 'three-to-cannon';
 
 export default class Physics {
   constructor(time, resources) {
@@ -22,7 +22,7 @@ export default class Physics {
   }
 
   setChar() {
-    const defaultMaterial = new CANNON.Material("default");
+    const defaultMaterial = new CANNON.Material('default');
     //Cube
     const shape = new CANNON.Box(
       new CANNON.Vec3(
@@ -55,7 +55,7 @@ export default class Physics {
     world.gravity.set(0, -5, 0);
 
     // Physics contact material
-    const defaultMaterial = new CANNON.Material("default");
+    const defaultMaterial = new CANNON.Material('default');
     const defaultContactMaterial = new CANNON.ContactMaterial(
       defaultMaterial,
       defaultMaterial,
@@ -85,7 +85,7 @@ export default class Physics {
   }
 
   setPhysicsWorldUpdate() {
-    this.time.on("tick", () => {
+    this.time.on('tick', () => {
       this.world.step(1 / 60, this.time.delta, 3);
 
       //Update all for physics

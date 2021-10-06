@@ -1,15 +1,15 @@
-import * as THREE from "three";
-import gsap from "gsap";
-import Time from "./Utils/Time.js";
-import Sizes from "./Utils/Sizes.js";
-import Stats from "./Utils/Stats.js";
+import * as THREE from 'three';
+import gsap from 'gsap';
+import Time from './Utils/Time.js';
+import Sizes from './Utils/Sizes.js';
+import Stats from './Utils/Stats.js';
 
-import Resources from "./Resources.js";
-import Renderer from "./Renderer.js";
-import Camera from "./Camera.js";
-import World from "./World.js";
+import Resources from './Resources.js';
+import Renderer from './Renderer.js';
+import Camera from './Camera.js';
+import World from './World.js';
 
-import assets from "./assets.js";
+import assets from './assets.js';
 
 export default class Experience {
   static instance;
@@ -38,7 +38,7 @@ export default class Experience {
     this.setResources();
     this.setWorld();
 
-    this.sizes.on("resize", () => {
+    this.sizes.on('resize', () => {
       this.resize();
     });
 
@@ -62,10 +62,13 @@ export default class Experience {
     );
 
     console.log(this.camera.modes.debug.instance.position);
+    this.resources.on('groupEnd', (_group) => {
+      this.resize();
+    });
   }
 
   cameraFollow() {
-    this.time.on("tick", () => {
+    this.time.on('tick', () => {
       // this.stats.begin();
       if (this.world.char) {
         const characterDetails = this.world.char;
