@@ -122,19 +122,22 @@ export default class World {
       if (child.name[0] === 'G') {
         child.material = grassMaterial;
       } else if (child.name[0] === 'D') {
-        console.log(child);
         child.material = dandelionMaterial;
-        console.log(child.material);
       } else if (child.name[0] === 'P') {
         child.material = pFlowerMaterial;
       } else if (child.name[0] === 'T') {
-        console.log('text', child);
         child.material.metalness = 0;
         child.material.color = new THREE.Color('white');
+      } else if (
+        child.name[0] === 'F' ||
+        child.name[0] === 'W' ||
+        child.name[0] === 'L' ||
+        child.name[0] === 'B'
+      ) {
+        child.material = floorMaterial;
       }
     });
 
-    console.log(floor);
     floor.rotation.y = Math.PI / 2;
 
     // const floor = new THREE.Mesh(
@@ -142,12 +145,14 @@ export default class World {
   }
 
   setLight() {
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
     this.scene.add(ambientLight);
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1a381a, 1);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1a381a, 0.6);
     hemiLight.position.set(3, 6.25, 7);
-    this.scene.add(hemiLight);
+    const hemiLight2 = new THREE.HemisphereLight(0xffffff, 0xdbffdb, 0.3);
+    hemiLight2.position.set(3, 6.25, 7);
+    this.scene.add(hemiLight, hemiLight2);
 
     // const directionalLight = new THREE.DirectionalLight(0x404040, 2);
     // directionalLight.position.set(27.49, 38.32, 23.15);
@@ -155,16 +160,16 @@ export default class World {
     // this.scene.add(directionalLight);
 
     this.parameters = { color: 0xffffff, groundColor: 0x2600 };
-    this.gui.add(hemiLight.position, 'x', -10, 10, 0.01).name('hemi x');
-    this.gui.add(hemiLight.position, 'y', -0, 10, 0.01).name('hemi y');
-    this.gui.add(hemiLight.position, 'z', -10, 10, 0.01).name('directional z');
+    this.gui.add(hemiLight2.position, 'x', -10, 10, 0.01).name('hemi x');
+    this.gui.add(hemiLight2.position, 'y', -0, 10, 0.01).name('hemi y');
+    this.gui.add(hemiLight2.position, 'z', -10, 10, 0.01).name('directional z');
 
     this.gui
       .addColor(this.parameters, 'color')
-      .onChange(() => hemiLight.color.set(this.parameters.color));
+      .onChange(() => hemiLight2.color.set(this.parameters.color));
     this.gui
       .addColor(this.parameters, 'groundColor')
-      .onChange(() => hemiLight.groundColor.set(this.parameters.groundColor));
+      .onChange(() => hemiLight2.groundColor.set(this.parameters.groundColor));
   }
 
   resize() {}
