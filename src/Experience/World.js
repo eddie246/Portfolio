@@ -1,3 +1,4 @@
+//THREE
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 import Experience from './Experience.js';
@@ -5,7 +6,12 @@ import Experience from './Experience.js';
 import Char from './char.js';
 import Companion from './companion.js';
 
+//PHYSICS
+import * as CANNON from 'cannon-es';
+
 import Physics from './physics.js';
+import Foliage from './Foliage.js';
+import Text from './Text.js';
 
 export default class World {
   constructor(_options) {
@@ -16,19 +22,20 @@ export default class World {
     this.time = this.experience.time;
 
     //DEBUG MENU ONLY
-    this.gui = new dat.GUI();
+    // this.gui = new dat.GUI();
 
     this.resources.on('groupEnd', (_group) => {
       this.physics = new Physics(this.time, this.resources);
+
       if (_group.name === 'base') {
-        this.setDummy();
+        this.setWorld();
 
         this.setLight();
       }
     });
   }
 
-  setDummy() {
+  setWorld() {
     this.char = new Char(this.resources, this.physics, this.time);
     this.companion = new Companion(this.resources, this.time, this.char);
     this.scene.add(this.char.model, this.companion.model);
@@ -40,18 +47,16 @@ export default class World {
     const gas = this.resources.items.gasModel.scene;
     const construction = this.resources.items.constructionModel.scene;
     const floorPlane = this.resources.items.floorModel.scene;
-    const grass = this.resources.items.grassModel.scene;
 
-    floor.add(diner, apartments, gas, construction, grass, floorPlane);
+    this.scene.add(diner, apartments, gas, construction, floorPlane);
+    this.foliage = new Foliage(this.scene, this.resources, this.time);
+    this.text = new Text(this.scene, this.resources, this.physics);
 
     this.resources.items.dinerTexture.flipY = false;
     this.resources.items.apartmentsTexture.flipY = false;
     this.resources.items.gasTexture.flipY = false;
     this.resources.items.constructionTexture.flipY = false;
     this.resources.items.floorTexture.flipY = false;
-    this.resources.items.grassTexture.flipY = false;
-    this.resources.items.dandelionTexture.flipY = false;
-    this.resources.items.pFlowerTexture.flipY = false;
 
     const dinerMaterial = new THREE.MeshBasicMaterial({
       map: this.resources.items.dinerTexture,
@@ -69,40 +74,6 @@ export default class World {
       map: this.resources.items.floorTexture,
     });
 
-    const grassMaterial = new THREE.MeshStandardMaterial({
-      color: '#53a113',
-      map: this.resources.items.grassTexture,
-      transparent: true,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-    });
-
-    grassMaterial.blending = THREE.CustomBlending;
-    grassMaterial.blendSrc = THREE.OneFactor;
-    grassMaterial.blendDst = THREE.OneMinusSrcAlphaFactor;
-
-    const dandelionMaterial = new THREE.MeshStandardMaterial({
-      // color: '#aaaaaa',
-      map: this.resources.items.dandelionTexture,
-      transparent: true,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-      metalness: 0,
-    });
-
-    const pFlowerMaterial = new THREE.MeshStandardMaterial({
-      // color: '#aaaaaa',
-      map: this.resources.items.pFlowerTexture,
-      transparent: true,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-      flatShading: true,
-    });
-
-    dandelionMaterial.blending = THREE.CustomBlending;
-    dandelionMaterial.blendSrc = THREE.OneFactor;
-    dandelionMaterial.blendDst = THREE.OneMinusSrcAlphaFactor;
-
     diner.traverse((child) => {
       child.material = dinerMaterial;
     });
@@ -118,25 +89,57 @@ export default class World {
     floorPlane.traverse((child) => {
       child.material = floorMaterial;
     });
-    grass.traverse((child) => {
-      if (child.name[0] === 'G') {
-        child.material = grassMaterial;
-      } else if (child.name[0] === 'D') {
-        child.material = dandelionMaterial;
-      } else if (child.name[0] === 'P') {
-        child.material = pFlowerMaterial;
-      } else if (child.name[0] === 'T') {
-        child.material.metalness = 0;
-        child.material.color = new THREE.Color('white');
-      } else if (
-        child.name[0] === 'F' ||
-        child.name[0] === 'W' ||
-        child.name[0] === 'L' ||
-        child.name[0] === 'B'
-      ) {
-        child.material = floorMaterial;
-      }
-    });
+
+    // for (const child of text.children) {
+    //   if (child.name === 'Skills') {
+    //     const textBox = new CANNON.Box(new CANNON.Vec3(1.7, 0.5, 0.5));
+
+    //     const body = new CANNON.Body({
+    //       mass: 1,
+    //       position: new CANNON.Vec3(0, 4, 0),
+    //       shape: textBox,
+    //       material: this.physics.defaultMaterial,
+    //     });
+
+    //     this.scene.add(child);
+
+    //     this.physics.world.addBody(body);
+
+    //     this.physics.updatePhysics(
+    //       {
+    //         mesh: child,
+    //         body: body,
+    //       },
+    //       {
+    //         all: true,
+    //       }
+    //     );
+    //   }
+    //   if (child.name === 'TechStack') {
+    //     const textBox = new CANNON.Box(new CANNON.Vec3(1.7, 0.5, 0.5));
+
+    //     const body = new CANNON.Body({
+    //       mass: 1,
+    //       position: new CANNON.Vec3(2, 4, 2),
+    //       shape: textBox,
+    //       material: this.physics.defaultMaterial,
+    //     });
+
+    //     this.scene.add(child);
+
+    //     this.physics.world.addBody(body);
+
+    //     this.physics.updatePhysics(
+    //       {
+    //         mesh: child,
+    //         body: body,
+    //       },
+    //       {
+    //         all: true,
+    //       }
+    //     );
+    //   }
+    // }
 
     floor.rotation.y = Math.PI / 2;
 
@@ -148,7 +151,7 @@ export default class World {
     const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
     this.scene.add(ambientLight);
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1a381a, 0.6);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0, 0.6);
     hemiLight.position.set(3, 6.25, 7);
     const hemiLight2 = new THREE.HemisphereLight(0xffffff, 0xdbffdb, 0.3);
     hemiLight2.position.set(3, 6.25, 7);
@@ -159,17 +162,19 @@ export default class World {
     // directionalLight.lookAt(new THREE.Vector3(0, -60, 20));
     // this.scene.add(directionalLight);
 
-    this.parameters = { color: 0xffffff, groundColor: 0x2600 };
-    this.gui.add(hemiLight2.position, 'x', -10, 10, 0.01).name('hemi x');
-    this.gui.add(hemiLight2.position, 'y', -0, 10, 0.01).name('hemi y');
-    this.gui.add(hemiLight2.position, 'z', -10, 10, 0.01).name('directional z');
+    //Dat gui debug
 
-    this.gui
-      .addColor(this.parameters, 'color')
-      .onChange(() => hemiLight2.color.set(this.parameters.color));
-    this.gui
-      .addColor(this.parameters, 'groundColor')
-      .onChange(() => hemiLight2.groundColor.set(this.parameters.groundColor));
+    // this.parameters = { color: 0xffffff, groundColor: 0x2600 };
+    // this.gui.add(hemiLight.position, 'x', -10, 10, 0.01).name('hemi x');
+    // this.gui.add(hemiLight.position, 'y', -0, 10, 0.01).name('hemi y');
+    // this.gui.add(hemiLight.position, 'z', -10, 10, 0.01).name('directional z');
+
+    // this.gui
+    //   .addColor(this.parameters, 'color')
+    //   .onChange(() => hemiLight.color.set(this.parameters.color));
+    // this.gui
+    //   .addColor(this.parameters, 'groundColor')
+    //   .onChange(() => hemiLight.groundColor.set(this.parameters.groundColor));
   }
 
   resize() {}

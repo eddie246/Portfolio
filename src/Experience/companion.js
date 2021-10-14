@@ -23,9 +23,7 @@ export default class Companion {
     this.model.children[0].position.y = -2.1;
 
     this.model.traverse((child) => {
-      // child.material = new THREE.MeshBasicMaterial();
       if (child.material) {
-        // console.log(child.material);
         child.material.metalness = 0;
         if (child.material.name === 'Brown') {
           child.material.color = new THREE.Color('#381F18');
@@ -45,22 +43,13 @@ export default class Companion {
     console.log(this.animations);
 
     // Idle Animation
-    this.idleAnimation = this.mixer.clipAction(this.animations[1]);
+    this.idleAnimation = this.mixer.clipAction(this.animations[0]);
     this.idleAnimation.play();
 
     // Walk/Run animation
-    this.walkAnimation = this.mixer.clipAction(this.animations[3]);
+    this.walkAnimation = this.mixer.clipAction(this.animations[2]);
     this.walkAnimation.play();
     this.walkAnimation.weight = 0;
-
-    // Lie down animation
-    // this.lieDownAnimation = this.mixer.clipAction(this.animations[0]);
-    // this.lieDownAnimation.repetitions = 1;
-    // this.lieDownAnimation.play();
-
-    // Jump animation
-    // this.jumpAnimation = this.mixer.clipAction(this.animations[2]);
-    // this.jumpAnimation.repetitions = 1;
   }
 
   eventListeners() {
@@ -100,22 +89,11 @@ export default class Companion {
 
   move() {
     const leader = this.leader.model;
-    // console.log(this.model.position, this.leader);
-    // this.model.position.set(
-    //   leader.position.x + 2,
-    //   // leader.position.y,
-    //   1,
-    //   leader.position.z + 2
-    // );
     this.model.position.y = 1;
     gsap.to(this.model.position, {
       x: leader.position.x + 2,
       duration: 0.4,
     });
-    // gsap.to(this.model.position, {
-    //   y: leader.position.y,
-    //   duration: 0.4,
-    // });
     gsap.to(this.model.position, {
       z: leader.position.z + 2,
       duration: 0.4,

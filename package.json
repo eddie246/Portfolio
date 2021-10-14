@@ -1,8 +1,9 @@
 {
   "repository": "#",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "webpack --config ./bundler/webpack.prod.js",
+    "start": "webpack serve --config ./bundler/webpack.prod.js",
     "dev": "webpack serve --config ./bundler/webpack.dev.js"
   },
   "dependencies": {

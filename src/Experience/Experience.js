@@ -134,11 +134,13 @@ export default class Experience {
   setStats() {
     if (this.config.debug) {
       this.stats = new Stats(true);
+      console.log(this.stats);
     }
   }
 
   setScene() {
     this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color('#2E2E30');
   }
 
   setCamera() {

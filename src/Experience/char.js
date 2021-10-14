@@ -24,22 +24,7 @@ export default class Character {
     this.setCharacter();
     this.eventListeners();
     this.updateFrame();
-
-    // this.moveSpeedBasedOnRefreshrate();
   }
-
-  // moveSpeedBasedOnRefreshrate() {
-  //   window.setTimeout(() => {
-  //     const playerMoveSpeedFPS = 0.15 * this.time.delta;
-  //     if (playerMoveSpeedFPS >= 2.4 || playerMoveSpeedFPS <= 1) {
-  //       this.maxPlayerMoveSpeed = 1.5;
-  //       this.moveSpeedBasedOnRefreshrate();
-  //     } else {
-  //       this.maxPlayerMoveSpeed = playerMoveSpeedFPS;
-  //     }
-  //     console.log(this.maxPlayerMoveSpeed);
-  //   }, 1000);
-  // }
 
   updateFrame() {
     this.time.on('tick', () => {
@@ -52,13 +37,6 @@ export default class Character {
     });
   }
 
-  // executeCrossFade(startAction, endAction, duration) {
-  //   this.setWeight(endAction, 1);
-  //   endAction.time = 0;
-
-  //   startAction.crossFadeTo(endAction, duration, true);
-  // }
-
   setWeight(action, weight) {
     action.enabled = true;
     action.setEffectiveTimeScale(1);
@@ -70,62 +48,44 @@ export default class Character {
      * THREE
      */
     // Character model
-    // this.model = this.resources.items.foxModel.scene;
     this.model = this.resources.items.robotModel.scene;
-    // this.model = this.resources.items.dogModel.scene;
 
     /**
      *  Player Animations
      */
-    // Animation debugging
-    // this.mixer = new THREE.AnimationMixer(this.model);
-    // console.log(this.resources.items.dogModel);
-    // //Dog walk duration must be 1.25
-    // // this.resources.items.dogModel.animations[3].duration = 1.25;
-    // const action = this.mixer.clipAction(
-    //   this.resources.items.dogModel.animations[3]
-    // );
-
-    // action.play();
 
     // Animation mixer
     this.animations = this.resources.items.robotModel.animations;
     this.mixer = new THREE.AnimationMixer(this.model);
-    // console.log(this.animations);
+    console.log(this.animations);
 
-    // Idle Animation
-    this.idleAnimation = this.mixer.clipAction(this.animations[1]);
+    // Idle
+    this.idleAnimation = this.mixer.clipAction(this.animations[0]);
     this.idleAnimation.play();
 
-    // Walk/Run animation
-    this.walkAnimation = this.mixer.clipAction(this.animations[5]);
+    // Walk/Run
+    this.walkAnimation = this.mixer.clipAction(this.animations[3]);
     this.walkAnimation.play();
     this.walkAnimation.weight = 0;
 
-    // Jump animation
-    this.jumpAnimation = this.mixer.clipAction(this.animations[2]);
+    // Jump
+    this.jumpAnimation = this.mixer.clipAction(this.animations[1]);
     this.jumpAnimation.repetitions = 1;
 
-    // Punch animation
-    this.punchAnimation = this.mixer.clipAction(this.animations[4]);
+    // Punch
+    this.punchAnimation = this.mixer.clipAction(this.animations[2]);
     this.punchAnimation.repetitions = 1;
 
     /**
      *  Scene settings
      */
-    // Fox
-    // this.model.scale.set(0.01, 0.01, 0.01);
-
     // Robot
     this.model.scale.set(0.5, 0.5, 0.5);
-    // this.model.scale.set(0.3, 0.3, 0.3);
     this.model.children[0].position.y = -2;
     this.model.rotation.y = this.playerDirection;
 
     this.model.traverse((child) => {
-      // child.material = new THREE.MeshBasicMaterial();
       if (child.material) {
-        // console.log(child.material);
         child.material.metalness = 0;
         if (child.material.name === 'Main') {
           child.material.color = new THREE.Color('#DFA33E');
@@ -136,11 +96,6 @@ export default class Character {
         }
       }
     });
-
-    // this.model = new THREE.Mesh(
-    //   new THREE.BoxBufferGeometry(1, 2, 1),
-    //   new THREE.MeshBasicMaterial()
-    // );
 
     /**
      * CANNON
