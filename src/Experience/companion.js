@@ -88,7 +88,7 @@ export default class Companion {
 
   move() {
     const leader = this.leader.model;
-    this.model.position.y = 1;
+    // this.model.position.y = 1;
     gsap.to(this.model.position, {
       x: leader.position.x + 2,
       duration: 0.4,

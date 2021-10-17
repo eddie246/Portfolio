@@ -10,6 +10,7 @@ import Camera from './Camera.js';
 import World from './World.js';
 
 import assets from './assets.js';
+import Touch from './touch.js';
 
 export default class Experience {
   static instance;
@@ -37,6 +38,7 @@ export default class Experience {
     this.setRenderer();
     this.setResources();
     this.setWorld();
+    this.setTouch();
 
     this.sizes.on('resize', () => {
       this.resize();
@@ -199,6 +201,10 @@ export default class Experience {
 
   setWorld() {
     this.world = new World();
+  }
+
+  setTouch() {
+    this.touch = new Touch();
   }
 
   update() {

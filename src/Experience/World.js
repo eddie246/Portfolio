@@ -100,7 +100,12 @@ export default class World {
   }
 
   setWorld() {
-    this.char = new Char(this.resources, this.physics, this.time);
+    this.char = new Char(
+      this.resources,
+      this.physics,
+      this.time,
+      this.experience.touch
+    );
     this.companion = new Companion(this.resources, this.time, this.char);
     this.scene.add(this.char.model, this.companion.model);
 

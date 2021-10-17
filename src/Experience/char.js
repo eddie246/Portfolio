@@ -2,10 +2,11 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 
 export default class Character {
-  constructor(resources, physics, time) {
+  constructor(resources, physics, time, touch) {
     this.resources = resources;
     this.physics = physics;
     this.time = time;
+    this.touch = touch;
 
     // Player Details
     this.keysPressed = {};
@@ -22,6 +23,7 @@ export default class Character {
 
     this.setCharacter();
     this.eventListeners();
+    this.touchControls();
     this.updateFrame();
   }
 
@@ -40,6 +42,59 @@ export default class Character {
     action.enabled = true;
     action.setEffectiveTimeScale(1);
     action.setEffectiveWeight(weight);
+  }
+
+  touchControls() {
+    this.touch.manager.on('move', (data, moveData) => {
+      const angle = moveData.angle.degree;
+      if ((angle < 22.5 && angle > 0) || (angle > 0 && angle > 337.5)) {
+        this.keysPressed = {
+          KeyD: true,
+        };
+      } else if (angle > 22.5 && angle < 67.5) {
+        this.keysPressed = {
+          KeyD: true,
+          KeyW: true,
+        };
+      } else if (angle > 67.5 && angle < 112.6) {
+        this.keysPressed = {
+          KeyW: true,
+        };
+      } else if (angle > 112.6 && angle < 157.5) {
+        this.keysPressed = {
+          KeyW: true,
+          KeyA: true,
+        };
+      } else if (angle > 157.5 && angle < 202.5) {
+        this.keysPressed = {
+          KeyA: true,
+        };
+      } else if (angle > 202.5 && angle < 247.5) {
+        this.keysPressed = {
+          KeyA: true,
+          KeyS: true,
+        };
+      } else if (angle > 247.5 && angle < 292.5) {
+        this.keysPressed = {
+          KeyS: true,
+        };
+      } else if (angle > 292.5 && angle < 337.5) {
+        this.keysPressed = {
+          KeyS: true,
+          KeyD: true,
+        };
+      }
+      this.animationController();
+      this.updateDirection();
+    });
+    this.touch.manager.on('end', () => {
+      this.keysPressed = {};
+      this.animationController();
+    });
+
+    document.querySelector('.button').addEventListener('touchstart', () => {
+      this.jump;
+    });
   }
 
   setCharacter() {
