@@ -26,7 +26,6 @@ export default class Foliage {
     this.setDandelion();
     this.setPFlower();
     this.setBush();
-    // this.setPlants();
 
     this.applyMaterial();
   }
@@ -128,21 +127,6 @@ export default class Foliage {
 
     this.materials.bushMaterial = bushMaterial;
   }
-
-  // setPlants() {
-  //   const plantsMaterial = new THREE.ShaderMaterial({
-  //     vertexShader: treeVertexShader,
-  //     fragmentShader: treeFragmentShader,
-  //     side: THREE.DoubleSide,
-  //     uniforms: {
-  //       uTime: { value: 0 },
-  //       uColor: { value: new THREE.Color('#ffffff') },
-  //       uTexture: { value: this.resources.items.floorTexture },
-  //     },
-  //   });
-
-  //   this.materials.plantsMaterial = plantsMaterial;
-  // }
 
   updateShaders() {
     this.time.on('tick', () => {

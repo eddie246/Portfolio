@@ -1,5 +1,4 @@
 import * as CANNON from 'cannon-es';
-import { threeToCannon, ShapeType } from 'three-to-cannon';
 
 import * as THREE from 'three';
 

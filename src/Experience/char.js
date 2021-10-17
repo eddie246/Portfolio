@@ -23,7 +23,9 @@ export default class Character {
 
     this.setCharacter();
     this.eventListeners();
-    this.touchControls();
+    if (this.touch) {
+      this.touchControls();
+    }
     this.updateFrame();
   }
 
@@ -178,11 +180,6 @@ export default class Character {
       this.updateDirection();
       this.animationController();
     });
-
-    window.addEventListener('click', () => {
-      console.log('punch');
-      this.punch();
-    });
   }
 
   animationController(key) {
@@ -198,17 +195,6 @@ export default class Character {
       gsap.to(this.idleAnimation, { weight: 1, duration: 3, delay: 0.5 });
       gsap.to(this.walkAnimation, { weight: 0, duration: 1 });
     }
-  }
-
-  punch() {
-    this.punchAnimation.stop();
-    this.idleAnimation.weight = 0;
-    gsap.to(this.walkAnimation, { weight: 0, duration: 0.3 });
-    this.punchAnimation.play();
-
-    gsap.to(this.idleAnimation, { weight: 1, duration: 2, delay: 1 });
-
-    console.log(this.model.position);
   }
 
   jump() {

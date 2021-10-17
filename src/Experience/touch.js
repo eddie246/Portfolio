@@ -1,5 +1,4 @@
 import nipplejs from 'nipplejs';
-
 export default class touchControls {
   constructor() {
     const body = document.body;
@@ -17,10 +16,5 @@ export default class touchControls {
       mode: 'static',
       position: { top: '50%', left: '50%' },
     });
-
-    // this.manager.on('dir:up', (data) => {
-    //   console.log(data);
-    // });
-    // console.log(this.manager);
   }
 }

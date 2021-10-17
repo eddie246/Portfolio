@@ -5,7 +5,6 @@ import Experience from './Experience.js';
 import Char from './char.js';
 import Companion from './companion.js';
 
-import * as dat from 'dat.gui';
 import gsap from 'gsap';
 
 import Physics from './physics.js';
@@ -34,7 +33,6 @@ export default class World {
   }
 
   setLoading() {
-    this.gui = new dat.GUI();
     const fontLoader = new THREE.FontLoader();
     fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
       const textGeometry = new THREE.TextBufferGeometry('Loading...', {
@@ -59,10 +57,6 @@ export default class World {
       loadingBar.position.set(18, 142.7, 30);
       loadingBar.rotation.y = Math.PI / 2.5;
       loadingBar.scale.x = 0.01;
-
-      this.gui.add(loadingBar.position, 'x', -30, 30, 0.1);
-      this.gui.add(loadingBar.position, 'y', 100, 150, 0.1);
-      this.gui.add(loadingBar.position, 'z', -30, 30, 0.1);
 
       this.resources.loader.on('fileEnd', () => {
         const loadingProgress = this.resources.loader.currentLoading;
@@ -100,6 +94,7 @@ export default class World {
   }
 
   setWorld() {
+    this.experience.setTouch();
     this.char = new Char(
       this.resources,
       this.physics,

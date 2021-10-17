@@ -1,8 +1,5 @@
 import * as CANNON from 'cannon-es';
 import { threeToCannon, ShapeType } from 'three-to-cannon';
-
-import * as dat from 'dat.gui';
-
 export default class Text {
   constructor(scene, resources, physics) {
     this.scene = scene;
@@ -15,8 +12,6 @@ export default class Text {
       Eddie: new CANNON.Vec3(-2.45, 3, 6.22),
     };
 
-    // this.gui = new dat.GUI();
-
     this.setText();
   }
 
@@ -28,7 +23,6 @@ export default class Text {
         child.material.metalness = 0;
 
         const shape = threeToCannon(child, { type: ShapeType.BOX });
-        // const shape = new CANNON.Box(new CANNON.Vec3(1.7, 0.5, 0.5));
 
         const body = new CANNON.Body({
           mass:
