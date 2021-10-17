@@ -93,7 +93,7 @@ export default class Character {
     });
 
     document.querySelector('.button').addEventListener('touchstart', () => {
-      this.jump;
+      this.jump();
     });
   }
 
