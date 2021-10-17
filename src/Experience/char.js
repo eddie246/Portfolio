@@ -12,7 +12,6 @@ export default class Character {
 
     this.playerMoveSpeed = 0.5;
     this.maxPlayerMoveSpeed = 1.5;
-    console.log(this.time.delta, this.maxPlayerMoveSpeed);
 
     this.playerDirection = Math.PI / 2;
 
@@ -57,7 +56,6 @@ export default class Character {
     // Animation mixer
     this.animations = this.resources.items.robotModel.animations;
     this.mixer = new THREE.AnimationMixer(this.model);
-    console.log(this.animations);
 
     // Idle
     this.idleAnimation = this.mixer.clipAction(this.animations[0]);
@@ -154,11 +152,13 @@ export default class Character {
     this.punchAnimation.play();
 
     gsap.to(this.idleAnimation, { weight: 1, duration: 2, delay: 1 });
+
+    console.log(this.model.position);
   }
 
   jump() {
     const playerVelocity = this.physics.charPhysicsWorld.velocity;
-    if (playerVelocity.y < 0.1 && playerVelocity.y > 0) {
+    if (playerVelocity.y < 0.2 && playerVelocity.y > -0.2) {
       playerVelocity.y += 5;
 
       this.jumpAnimation.stop();

@@ -45,7 +45,9 @@ export default class Experience {
     this.update();
 
     //Camera Stuff
-    this.cameraCoords = { x: 30, y: 20, z: 30 };
+    this.loaded = false;
+    this.cameraCoords = { x: 30, y: 150, z: 30 };
+    this.camera.instance.position.set(30, 150, 30);
     this.cameraFollow();
     // this.camera.instance.quaternion.set(
     //   -0.2706115851600799,
@@ -54,6 +56,7 @@ export default class Experience {
     //   0.6532779921288233
     // );
 
+    this.cameraPosition = 'top';
     this.camera.instance.quaternion.set(
       -0.19696916101934828,
       0.6791181468372861,
@@ -61,7 +64,6 @@ export default class Experience {
       0.679120445307884
     );
 
-    console.log(this.camera.modes.debug.instance.position);
     this.resources.on('groupEnd', (_group) => {
       this.resize();
     });
@@ -69,49 +71,88 @@ export default class Experience {
 
   cameraFollow() {
     this.time.on('tick', () => {
-      // this.stats.begin();
-      if (this.world.char) {
+      if (this.loaded) {
         const characterDetails = this.world.char;
-        gsap.to(this.cameraCoords, {
-          duration: 0.1,
-          x: characterDetails.model.position.x + 30,
-        });
-        // gsap.to(this.cameraCoords, {
-        //   duration: 0.1,
-        //   y: characterDetails.model.position.y + 30,
-        // });
-        gsap.to(this.cameraCoords, {
-          duration: 0.1,
-          z: characterDetails.model.position.z,
-        });
+        if (characterDetails) {
+          if (
+            characterDetails.model.position.x < -42 &&
+            characterDetails.model.position.x > -75 &&
+            characterDetails.model.position.z > 10 &&
+            characterDetails.model.position.z < 40
+          ) {
+            if (this.cameraPosition === 'top') {
+              gsap.to(this.camera.instance.quaternion, {
+                duration: 3,
+                x: -3.9796843693760565e-7,
+              });
+              gsap.to(this.camera.instance.quaternion, {
+                duration: 3,
+                y: 0.7071068019423119,
+              });
+              gsap.to(this.camera.instance.quaternion, {
+                duration: 3,
+                z: 3.9796846030093416e-7,
+              });
+              gsap.to(this.camera.instance.quaternion, {
+                duration: 3,
+                w: 0.7071067604305586,
+              });
+              this.cameraPosition = 'bottom';
+            }
 
-        // this.cameraCoords.x = characterDetails.model.position.x + 30;
-        // this.cameraCoords.y = characterDetails.model.position.y + 30;
-        // this.cameraCoords.z = characterDetails.model.position.z;
+            gsap.to(this.cameraCoords, {
+              duration: 0.1,
+              x: characterDetails.model.position.x + 30,
+            });
+            gsap.to(this.cameraCoords, {
+              duration: 3,
+              y: characterDetails.model.position.y + 2,
+            });
+            gsap.to(this.cameraCoords, {
+              duration: 0.1,
+              z: characterDetails.model.position.z,
+            });
+          } else {
+            if (this.cameraPosition === 'bottom') {
+              gsap.to(this.camera.instance.quaternion, {
+                duration: 3,
+                x: -0.19696916101934828,
+              });
+              gsap.to(this.camera.instance.quaternion, {
+                duration: 3,
+                y: 0.6791181468372861,
+              });
+              gsap.to(this.camera.instance.quaternion, {
+                duration: 3,
+                z: 0.19696982766009027,
+              });
+              gsap.to(this.camera.instance.quaternion, {
+                duration: 3,
+                w: 0.679120445307884,
+              });
+              this.cameraPosition = 'top';
+            }
+            gsap.to(this.cameraCoords, {
+              duration: 0.1,
+              x: characterDetails.model.position.x + 30,
+            });
+            gsap.to(this.cameraCoords, {
+              duration: 4,
+              y: characterDetails.model.position.y + 20,
+            });
+            gsap.to(this.cameraCoords, {
+              duration: 0.1,
+              z: characterDetails.model.position.z,
+            });
+          }
+        }
 
-        // Causes jitter
-        // this.camera.instance.lookAt(
-        //   new THREE.Vector3(
-        //     characterDetails.model.position.x,
-        //     characterDetails.model.position.y,
-        //     characterDetails.model.position.z
-        //   )
-        // );
-        // console.log(this.camera.instance.quaternion);
+        this.camera.instance.position.set(
+          this.cameraCoords.x,
+          this.cameraCoords.y,
+          this.cameraCoords.z
+        );
       }
-
-      // this.camera.modes.debug.instance.position.set(
-      //   this.cameraCoords.x,
-      //   this.cameraCoords.y,
-      //   this.cameraCoords.z
-      // );
-
-      this.camera.instance.position.set(
-        this.cameraCoords.x,
-        this.cameraCoords.y,
-        this.cameraCoords.z
-      );
-      // this.stats.end();
     });
   }
 
@@ -134,7 +175,6 @@ export default class Experience {
   setStats() {
     if (this.config.debug) {
       this.stats = new Stats(true);
-      console.log(this.stats);
     }
   }
 

@@ -1,13 +1,12 @@
 //THREE
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
 import Experience from './Experience.js';
 
 import Char from './char.js';
 import Companion from './companion.js';
 
-//PHYSICS
-import * as CANNON from 'cannon-es';
+import * as dat from 'dat.gui';
+import gsap from 'gsap';
 
 import Physics from './physics.js';
 import Foliage from './Foliage.js';
@@ -21,17 +20,82 @@ export default class World {
     this.resources = this.experience.resources;
     this.time = this.experience.time;
 
-    //DEBUG MENU ONLY
-    // this.gui = new dat.GUI();
+    this.setLoading();
+    this.setLight();
 
     this.resources.on('groupEnd', (_group) => {
-      this.physics = new Physics(this.time, this.resources);
+      this.physics = new Physics(this.time, this.resources, this.scene);
 
       if (_group.name === 'base') {
+        // this.experience.loaded = true;
         this.setWorld();
-
-        this.setLight();
       }
+    });
+  }
+
+  setLoading() {
+    this.gui = new dat.GUI();
+    const fontLoader = new THREE.FontLoader();
+    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
+      const textGeometry = new THREE.TextBufferGeometry('Loading...', {
+        font,
+        size: 0.5,
+        height: 0.2,
+        curveSegments: 6,
+        bevelEnabled: true,
+        bevelThickness: 0.03,
+        bevelSize: 0.02,
+        bevelOffset: 0,
+        bevelSegments: 4,
+      });
+      textGeometry.center();
+
+      const loadingBar = new THREE.Mesh(
+        // new THREE.BoxBufferGeometry(5, 1, 1),
+        textGeometry,
+        new THREE.MeshStandardMaterial()
+      );
+
+      loadingBar.position.set(18, 142.7, 30);
+      loadingBar.rotation.y = Math.PI / 2.5;
+      loadingBar.scale.x = 0.01;
+
+      this.gui.add(loadingBar.position, 'x', -30, 30, 0.1);
+      this.gui.add(loadingBar.position, 'y', 100, 150, 0.1);
+      this.gui.add(loadingBar.position, 'z', -30, 30, 0.1);
+
+      this.resources.loader.on('fileEnd', () => {
+        const loadingProgress = this.resources.loader.currentLoading;
+
+        gsap.to(loadingBar.scale, {
+          x: loadingProgress[1] / loadingProgress[0],
+          duration: 0.8,
+        });
+
+        if (loadingProgress[1] / loadingProgress[0] === 1) {
+          const complete = new THREE.TextBufferGeometry('Complete!', {
+            font,
+            size: 0.5,
+            height: 0.2,
+            curveSegments: 6,
+            bevelEnabled: true,
+            bevelThickness: 0.03,
+            bevelSize: 0.02,
+            bevelOffset: 0,
+            bevelSegments: 4,
+          });
+
+          complete.center();
+          loadingBar.geometry = complete;
+
+          window.setTimeout(() => {
+            this.experience.loaded = true;
+            this.scene.remove(loadingBar);
+          }, 2000);
+        }
+      });
+
+      this.scene.add(loadingBar);
     });
   }
 
@@ -90,60 +154,8 @@ export default class World {
       child.material = floorMaterial;
     });
 
-    // for (const child of text.children) {
-    //   if (child.name === 'Skills') {
-    //     const textBox = new CANNON.Box(new CANNON.Vec3(1.7, 0.5, 0.5));
-
-    //     const body = new CANNON.Body({
-    //       mass: 1,
-    //       position: new CANNON.Vec3(0, 4, 0),
-    //       shape: textBox,
-    //       material: this.physics.defaultMaterial,
-    //     });
-
-    //     this.scene.add(child);
-
-    //     this.physics.world.addBody(body);
-
-    //     this.physics.updatePhysics(
-    //       {
-    //         mesh: child,
-    //         body: body,
-    //       },
-    //       {
-    //         all: true,
-    //       }
-    //     );
-    //   }
-    //   if (child.name === 'TechStack') {
-    //     const textBox = new CANNON.Box(new CANNON.Vec3(1.7, 0.5, 0.5));
-
-    //     const body = new CANNON.Body({
-    //       mass: 1,
-    //       position: new CANNON.Vec3(2, 4, 2),
-    //       shape: textBox,
-    //       material: this.physics.defaultMaterial,
-    //     });
-
-    //     this.scene.add(child);
-
-    //     this.physics.world.addBody(body);
-
-    //     this.physics.updatePhysics(
-    //       {
-    //         mesh: child,
-    //         body: body,
-    //       },
-    //       {
-    //         all: true,
-    //       }
-    //     );
-    //   }
-    // }
-
     floor.rotation.y = Math.PI / 2;
 
-    // const floor = new THREE.Mesh(
     this.scene.add(floor);
   }
 

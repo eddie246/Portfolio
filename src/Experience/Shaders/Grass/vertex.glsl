@@ -7,14 +7,14 @@ void main() {
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
     
   float elevation = ( 1.0 - uv.y) * 
-  sin(modelPosition.x + 
+  -abs(sin(modelPosition.x + 
   (uTime * 0.00114)) 
-  * 0.213;
+  * 0.183);
 
   float depth = ( 1.0 - uv.y) * 
   sin(modelPosition.z + 
   (uTime * 0.00132)) 
-  * 0.183;
+  * 0.164;
 
   float wave = ( 1.0 - uv.y) * 
   sin(modelPosition.z + 

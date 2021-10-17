@@ -1,9 +1,9 @@
 import EventEmitter from './EventEmitter.js';
 import Experience from '../Experience.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+// import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+// import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { BasisTextureLoader } from 'three/examples/jsm/loaders/BasisTextureLoader.js';
 
 export default class Resources extends EventEmitter {
@@ -21,6 +21,7 @@ export default class Resources extends EventEmitter {
     this.toLoad = 0;
     this.loaded = 0;
     this.items = {};
+    this.currentLoading = [];
   }
 
   /**
@@ -90,29 +91,29 @@ export default class Resources extends EventEmitter {
       },
     });
 
-    // FBX
-    const fbxLoader = new FBXLoader();
+    // // FBX
+    // const fbxLoader = new FBXLoader();
 
-    this.loaders.push({
-      extensions: ['fbx'],
-      action: (_resource) => {
-        fbxLoader.load(_resource.source, (_data) => {
-          this.fileLoadEnd(_resource, _data);
-        });
-      },
-    });
+    // this.loaders.push({
+    //   extensions: ['fbx'],
+    //   action: (_resource) => {
+    //     fbxLoader.load(_resource.source, (_data) => {
+    //       this.fileLoadEnd(_resource, _data);
+    //     });
+    //   },
+    // });
 
-    // RGBE | HDR
-    const rgbeLoader = new RGBELoader();
+    // // RGBE | HDR
+    // const rgbeLoader = new RGBELoader();
 
-    this.loaders.push({
-      extensions: ['hdr'],
-      action: (_resource) => {
-        rgbeLoader.load(_resource.source, (_data) => {
-          this.fileLoadEnd(_resource, _data);
-        });
-      },
-    });
+    // this.loaders.push({
+    //   extensions: ['hdr'],
+    //   action: (_resource) => {
+    //     rgbeLoader.load(_resource.source, (_data) => {
+    //       this.fileLoadEnd(_resource, _data);
+    //     });
+    //   },
+    // });
   }
 
   /**
@@ -146,6 +147,8 @@ export default class Resources extends EventEmitter {
   fileLoadEnd(_resource, _data) {
     this.loaded++;
     this.items[_resource.name] = _data;
+
+    this.currentLoading = [this.toLoad, this.loaded, _resource.name];
 
     this.trigger('fileEnd', [_resource, _data]);
 

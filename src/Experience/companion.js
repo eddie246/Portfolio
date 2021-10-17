@@ -40,7 +40,6 @@ export default class Companion {
     // Animation mixer
     this.animations = this.resources.items.dogModel.animations;
     this.mixer = new THREE.AnimationMixer(this.model);
-    console.log(this.animations);
 
     // Idle Animation
     this.idleAnimation = this.mixer.clipAction(this.animations[0]);
@@ -96,6 +95,10 @@ export default class Companion {
     });
     gsap.to(this.model.position, {
       z: leader.position.z + 2,
+      duration: 0.4,
+    });
+    gsap.to(this.model.position, {
+      y: leader.position.y,
       duration: 0.4,
     });
     this.model.rotation.y = this.leader.playerDirection;
