@@ -235,6 +235,11 @@ export default class World {
         } else if (currentIntersect.object.name === 'Github') {
           window.open('https://github.com/eddie246', '_blank').focus();
         }
+
+        if (this.experience.touch) {
+          mouse.x = 0;
+          mouse.y = 0;
+        }
       }
     });
   }
