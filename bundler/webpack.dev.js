@@ -8,7 +8,7 @@ const infoColor = (_message) => {
 };
 
 module.exports = merge(commonConfiguration, {
-  mode: 'production',
+  mode: 'development',
   devServer: {
     host: '0.0.0.0',
     port: portFinderSync.getPort(process.env.PORT || 8080),

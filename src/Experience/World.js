@@ -11,6 +11,9 @@ import Physics from './physics.js';
 import Foliage from './Foliage.js';
 import Text from './Text.js';
 
+import interactVertexShader from './Shaders/Interact/vertex.glsl';
+import interactFragmentShader from './Shaders/Interact/fragment.glsl';
+
 export default class World {
   constructor(_options) {
     this.experience = new Experience();
@@ -139,24 +142,101 @@ export default class World {
     });
 
     diner.traverse((child) => {
-      child.material = dinerMaterial;
+      if (child.material) child.material = dinerMaterial;
     });
     apartments.traverse((child) => {
-      child.material = apartmentsMaterial;
+      if (child.material) child.material = apartmentsMaterial;
     });
     gas.traverse((child) => {
-      child.material = gasMaterial;
+      if (child.material) child.material = gasMaterial;
     });
     construction.traverse((child) => {
-      child.material = constructionMaterial;
+      if (child.material) child.material = constructionMaterial;
     });
     floorPlane.traverse((child) => {
-      child.material = floorMaterial;
+      console.log(child.name);
+      if (child.material) child.material = floorMaterial;
     });
+
+    console.log(floorPlane);
+    this.setRay(floorPlane.children, floorMaterial);
 
     floor.rotation.y = Math.PI / 2;
 
     this.scene.add(floor);
+  }
+
+  setRay(objectsToTest, defaultMaterial) {
+    const raycaster = new THREE.Raycaster();
+
+    const mouse = new THREE.Vector2();
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = (e.clientX / this.experience.sizes.width) * 2 - 1;
+      mouse.y = -(e.clientY / this.experience.sizes.height) * 2 + 1;
+    });
+
+    const interactMaterial = new THREE.ShaderMaterial({
+      vertexShader: interactVertexShader,
+      fragmentShader: interactFragmentShader,
+      transparent: true,
+      uniforms: {
+        uTime: { value: 0 },
+        uColor: { value: new THREE.Color('#222222') },
+        uTexture: { value: this.resources.items.floorTexture },
+      },
+    });
+
+    let currentIntersect = null;
+
+    this.time.on('tick', () => {
+      raycaster.setFromCamera(mouse, this.experience.camera.instance);
+      const intersects = raycaster.intersectObjects(objectsToTest);
+
+      if (intersects.length > 1) {
+        if (currentIntersect === null) {
+          currentIntersect = intersects[0];
+
+          if (
+            currentIntersect.object.name === 'twitter_logo' ||
+            currentIntersect.object.name === 'LinkedIn' ||
+            currentIntersect.object.name === 'Mailbox' ||
+            currentIntersect.object.name === 'Github'
+          ) {
+            document.body.style.cursor = 'pointer';
+            currentIntersect.object.material = interactMaterial;
+          }
+
+          console.log('enter');
+        }
+      } else {
+        if (currentIntersect) {
+          currentIntersect = null;
+          document.body.style.cursor = '';
+
+          for (const item of objectsToTest) {
+            item.material = defaultMaterial;
+          }
+        }
+      }
+
+      interactMaterial.uniforms.uTime.value = this.time.elapsed;
+    });
+
+    window.addEventListener('click', (e) => {
+      if (currentIntersect && this.experience.loaded) {
+        if (currentIntersect.object.name === 'twitter_logo') {
+          window.open('https://twitter.com/eddiewang246', '_blank').focus();
+        } else if (currentIntersect.object.name === 'LinkedIn') {
+          window
+            .open('https://www.linkedin.com/in/eddie-wang2/', '_blank')
+            .focus();
+        } else if (currentIntersect.object.name === 'Mailbox') {
+          window.location.href = 'mailto:eddiewang12345@gmail.com';
+        } else if (currentIntersect.object.name === 'Github') {
+          window.open('https://github.com/eddie246', '_blank').focus();
+        }
+      }
+    });
   }
 
   setLight() {

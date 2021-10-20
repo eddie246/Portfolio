@@ -16,11 +16,13 @@ export default class Physics {
 
     this.setChar();
     this.setPhysicsWorldUpdate();
-    this.setDebug();
+    // this.setDebug();
     this.setDiner();
     this.setGas();
     this.setApartments();
     this.setConstruction();
+    this.setExtras();
+    this.setBoundingBox();
   }
 
   setDebug() {
@@ -266,71 +268,113 @@ export default class Physics {
     );
 
     this.world.addBody(constructionBody);
+  }
 
-    boxDebug(11, taxi, constructionBody, this.scene, this.gui);
+  setExtras() {
+    const treeTrunk = new CANNON.Box(new CANNON.Vec3(0.2, 4, 0.2));
 
-    function boxDebug(index, obj, body, scene, gui) {
-      const box = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(
-          obj.halfExtents.x * 2,
-          obj.halfExtents.y * 2,
-          obj.halfExtents.z * 2
-        ),
-        new THREE.MeshBasicMaterial({ wireframe: true })
-      );
-      scene.add(box);
+    const extraBody = new CANNON.Body({
+      mass: 0,
+      position: new CANNON.Vec3(-32, 0, 0),
+    });
 
-      box.position.x = body.position.x + body.shapeOffsets[index].x;
-      box.position.y = body.position.y + body.shapeOffsets[index].y;
-      box.position.z = body.position.z + body.shapeOffsets[index].z;
-      box.quaternion.copy(body.shapeOrientations[index]);
+    extraBody.addShape(treeTrunk, new CANNON.Vec3(-2.21, 0, -8.58));
+    extraBody.addShape(treeTrunk, new CANNON.Vec3(16.97, 0, -10.38));
+    extraBody.addShape(treeTrunk, new CANNON.Vec3(11.88, 0, -10.49));
+    extraBody.addShape(treeTrunk, new CANNON.Vec3(-7.87, 0, -33.85));
+    extraBody.addShape(treeTrunk, new CANNON.Vec3(-8.51, 0, 43.55));
+    extraBody.addShape(treeTrunk, new CANNON.Vec3(26.71, 0, 10.55));
+    extraBody.addShape(treeTrunk, new CANNON.Vec3(14.36, 0, 9.61));
+    extraBody.addShape(treeTrunk, new CANNON.Vec3(17.6, 0, 55.51));
 
-      //Rotation
-      gui
-        .add(box.rotation, 'x', -Math.PI, Math.PI, 0.01)
-        .name('rotation x')
-        .onChange(() => {
-          console.log(box.quaternion);
-        });
-      gui
-        .add(box.rotation, 'y', -Math.PI, Math.PI, 0.01)
-        .name('rotation y')
-        .onChange(() => {
-          console.log(box.quaternion);
-        });
-      gui
-        .add(box.rotation, 'z', -Math.PI, Math.PI, 0.01)
-        .name('rotation z')
-        .onChange(() => {
-          console.log(box.quaternion);
-        });
+    this.world.addBody(extraBody);
+  }
 
-      //Positions
-      gui
-        .add(body.shapeOffsets[index], 'x', -50, 50, 0.01)
-        .name('x coords')
-        .onChange(() => {
-          box.position.x = body.position.x + body.shapeOffsets[index].x;
-          box.position.y = body.position.y + body.shapeOffsets[index].y;
-          box.position.z = body.position.z + body.shapeOffsets[index].z;
-        });
-      gui
-        .add(body.shapeOffsets[index], 'z', -50, 50, 0.01)
-        .name('z coords')
-        .onChange(() => {
-          box.position.x = body.position.x + body.shapeOffsets[index].x;
-          box.position.y = body.position.y + body.shapeOffsets[index].y;
-          box.position.z = body.position.z + body.shapeOffsets[index].z;
-        });
-      gui
-        .add(body.shapeOffsets[index], 'y', 0, 2, 0.01)
-        .name('y coords')
-        .onChange(() => {
-          box.position.x = body.position.x + body.shapeOffsets[index].x;
-          box.position.y = body.position.y + body.shapeOffsets[index].y;
-          box.position.z = body.position.z + body.shapeOffsets[index].z;
-        });
-    }
+  setBoundingBox() {
+    const southWall = new CANNON.Box(new CANNON.Vec3(0.1, 5, 55));
+    const westWall = new CANNON.Box(new CANNON.Vec3(30, 5, 0.1));
+    const westWallShort = new CANNON.Box(new CANNON.Vec3(5, 5, 0.1));
+    const southWallShort = new CANNON.Box(new CANNON.Vec3(0.1, 5, 5));
+
+    const boundingBody = new CANNON.Body({
+      mass: 0,
+      position: new CANNON.Vec3(-5, 5, 0),
+    });
+
+    boundingBody.addShape(southWall, new CANNON.Vec3(20, 0, 14));
+    boundingBody.addShape(southWall, new CANNON.Vec3(-73.39, 0, 14));
+    boundingBody.addShape(westWall, new CANNON.Vec3(-9.23, 0, 68.81));
+    boundingBody.addShape(westWallShort, new CANNON.Vec3(-36.57, 0, 64.4));
+    boundingBody.addShape(westWall, new CANNON.Vec3(-18.1, 0, -37));
+    boundingBody.addShape(westWallShort, new CANNON.Vec3(14.41, 0, -19.63));
+    boundingBody.addShape(southWallShort, new CANNON.Vec3(-12.85, 0, -34.76));
+
+    this.world.addBody(boundingBody);
+
+    // boxDebug(6, southWallShort, boundingBody, this.scene, this.gui);
+
+    // function boxDebug(index, obj, body, scene, gui) {
+    //   const box = new THREE.Mesh(
+    //     new THREE.BoxBufferGeometry(
+    //       obj.halfExtents.x * 2,
+    //       obj.halfExtents.y * 2,
+    //       obj.halfExtents.z * 2
+    //     ),
+    //     new THREE.MeshBasicMaterial({ wireframe: true })
+    //   );
+    //   scene.add(box);
+
+    //   box.position.x = body.position.x + body.shapeOffsets[index].x;
+    //   box.position.y = body.position.y + body.shapeOffsets[index].y;
+    //   box.position.z = body.position.z + body.shapeOffsets[index].z;
+    //   box.quaternion.copy(body.shapeOrientations[index]);
+
+    //   //Rotation
+    //   gui
+    //     .add(box.rotation, 'x', -Math.PI, Math.PI, 0.01)
+    //     .name('rotation x')
+    //     .onChange(() => {
+    //       console.log(box.quaternion);
+    //     });
+    //   gui
+    //     .add(box.rotation, 'y', -Math.PI, Math.PI, 0.01)
+    //     .name('rotation y')
+    //     .onChange(() => {
+    //       console.log(box.quaternion);
+    //     });
+    //   gui
+    //     .add(box.rotation, 'z', -Math.PI, Math.PI, 0.01)
+    //     .name('rotation z')
+    //     .onChange(() => {
+    //       console.log(box.quaternion);
+    //     });
+
+    //   //Positions
+    //   gui
+    //     .add(body.shapeOffsets[index], 'x', -80, 80, 0.01)
+    //     .name('x coords')
+    //     .onChange(() => {
+    //       box.position.x = body.position.x + body.shapeOffsets[index].x;
+    //       box.position.y = body.position.y + body.shapeOffsets[index].y;
+    //       box.position.z = body.position.z + body.shapeOffsets[index].z;
+    //     });
+    //   gui
+    //     .add(body.shapeOffsets[index], 'z', -80, 80, 0.01)
+    //     .name('z coords')
+    //     .onChange(() => {
+    //       box.position.x = body.position.x + body.shapeOffsets[index].x;
+    //       box.position.y = body.position.y + body.shapeOffsets[index].y;
+    //       box.position.z = body.position.z + body.shapeOffsets[index].z;
+    //     });
+    //   gui
+    //     .add(body.shapeOffsets[index], 'y', 0, 2, 0.01)
+    //     .name('y coords')
+    //     .onChange(() => {
+    //       box.position.x = body.position.x + body.shapeOffsets[index].x;
+    //       box.position.y = body.position.y + body.shapeOffsets[index].y;
+    //       box.position.z = body.position.z + body.shapeOffsets[index].z;
+    //     });
+    // }
   }
 
   setPhysicsWorldUpdate() {
