@@ -13,7 +13,7 @@ import assets from './assets.js';
 import Touch from './touch.js';
 
 export default class Experience {
-  static instance;
+  // static instance;
 
   constructor(_options = {}) {
     if (Experience.instance) {
