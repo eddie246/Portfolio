@@ -9,7 +9,7 @@ export default class Companion {
 
     this.setCompanion();
     this.updateFrame();
-    this.eventListeners();
+    // this.eventListeners();
   }
 
   setCompanion() {
@@ -44,7 +44,7 @@ export default class Companion {
     this.idleAnimation.play();
 
     // Walk/Run animation
-    this.walkAnimation = this.mixer.clipAction(this.animations[2]);
+    this.walkAnimation = this.mixer.clipAction(this.animations[1]);
     this.walkAnimation.play();
     this.walkAnimation.weight = 0;
   }
@@ -69,7 +69,7 @@ export default class Companion {
     });
   }
 
-  animationController(key) {
+  animationController() {
     if (
       this.leader.keysPressed['KeyW'] ||
       this.leader.keysPressed['KeyA'] ||
@@ -99,5 +99,7 @@ export default class Companion {
       duration: 0.4,
     });
     this.model.rotation.y = this.leader.playerDirection;
+
+    this.animationController();
   }
 }

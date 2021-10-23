@@ -154,11 +154,9 @@ export default class World {
       if (child.material) child.material = constructionMaterial;
     });
     floorPlane.traverse((child) => {
-      console.log(child.name);
       if (child.material) child.material = floorMaterial;
     });
 
-    console.log(floorPlane);
     this.setRay(floorPlane.children, floorMaterial);
 
     floor.rotation.y = Math.PI / 2;

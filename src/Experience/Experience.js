@@ -181,7 +181,7 @@ export default class Experience {
 
   setScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color('#2E2E30');
+    this.scene.background = new THREE.Color('#2B2B2B');
   }
 
   setCamera() {

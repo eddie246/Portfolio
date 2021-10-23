@@ -92,6 +92,7 @@ export default class Character {
     this.touch.manager.on('end', () => {
       this.keysPressed = {};
       this.animationController();
+      this.updateDirection();
     });
 
     document.querySelector('.button').addEventListener('touchstart', () => {
@@ -119,7 +120,7 @@ export default class Character {
     this.idleAnimation.play();
 
     // Walk/Run
-    this.walkAnimation = this.mixer.clipAction(this.animations[3]);
+    this.walkAnimation = this.mixer.clipAction(this.animations[2]);
     this.walkAnimation.play();
     this.walkAnimation.weight = 0;
 
@@ -128,8 +129,8 @@ export default class Character {
     this.jumpAnimation.repetitions = 1;
 
     // Punch
-    this.punchAnimation = this.mixer.clipAction(this.animations[2]);
-    this.punchAnimation.repetitions = 1;
+    // this.punchAnimation = this.mixer.clipAction(this.animations[2]);
+    // this.punchAnimation.repetitions = 1;
 
     /**
      *  Scene settings
