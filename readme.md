@@ -4,7 +4,7 @@ Working in progress portfolio website built using Three.js and WebGL.
 
 Live at: https://www.eddie-wang.dev/
 
-note: perfomance may not be optimal on low-end hardware
+note: perfomance may not be optimal on low-end hardware or Safari
 
 ## To run locally
 Download [Node.js](https://nodejs.org/en/download/).
