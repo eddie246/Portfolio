@@ -22,4 +22,5 @@ npm run build
 ```
 # Thank you to
 Bruno Simon for the Template and lessons. Find him at: https://github.com/brunosimon
+
 Mr.doob and contributors for creating Three.js: https://github.com/mrdoob
