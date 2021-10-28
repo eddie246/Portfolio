@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,400;0,700;1,200&display=swap');
+
+* {
+  margin: 0;
+}
+
+body {
+  background-color: rgb(31, 40, 51);
+  overflow-x: hidden;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Background Canvas */
+.background-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Navigation Bar */
+
+#nav {
+  background: -webkit-linear-gradient(180deg, #00000054 0%, #ffffff00 60%);
+  background: -o-linear-gradient(180deg, #00000054 0%, #ffffff00 60%);
+  background: -moz-linear-gradient(180deg, #00000054 0%, #ffffff00 60%);
+  background: linear-gradient(180deg, #00000054 0%, #ffffff00 60%);
+}
+
+button {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+button.learn-more {
+  width: 10rem;
+  height: auto;
+  margin-right: 1rem;
+}
+
+button.learn-more .circle {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  background: rgb(197, 198, 199);
+  border-radius: 1.625rem;
+}
+
+button.learn-more .circle .icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  /* background: #fff; */
+}
+
+button.learn-more .circle .icon.arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.2rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+}
+
+button.learn-more .button-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.75rem 0;
+  margin: 0 0 0 1.85rem;
+  color: rgb(86, 216, 207);
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+button:hover .circle {
+  width: 100%;
+}
+
+button:hover .button-text {
+  color: #1f4b49;
+}
+
+#menu {
+  display: none;
+}
+
+/* Mobile view */
+
+@media screen and (max-width: 1024px) {
+  /* #nav {
+    padding: 10px 30px;
+  } */
+  .Icons {
+    display: none;
+  }
+  #menu {
+    display: flex;
+  }
+}
