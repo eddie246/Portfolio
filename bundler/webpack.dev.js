@@ -14,7 +14,6 @@ module.exports = merge(commonConfiguration, {
     port: portFinderSync.getPort(process.env.PORT || 8080),
     contentBase: './dist',
     watchContentBase: true,
-    hot: true,
     open: true,
     https: false,
     useLocalIp: true,

@@ -6,7 +6,7 @@
 
 body {
   background-color: rgb(31, 40, 51);
-  overflow-x: hidden;
+  overflow: hidden;
   font-family: 'Nunito', sans-serif;
 }
 
@@ -15,6 +15,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+  /* width: 100vw; */
   z-index: -1;
 }
 
