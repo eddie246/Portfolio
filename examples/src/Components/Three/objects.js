@@ -14,7 +14,7 @@ export default class Objects {
     this.links = [
       {
         href: 'https://www.eddie-wang.dev/',
-        src: '/assets/textures/home.jpg',
+        src: '/assets/textures/home.JPG',
         name: 'homepage',
       },
       {
