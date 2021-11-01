@@ -18,7 +18,7 @@ export default class Objects {
         name: 'homepage',
       },
       {
-        src: '/assets/textures/all.jpg',
+        src: '/assets/textures/All.jpg',
         name: 'test',
         href: '#',
       },
@@ -39,7 +39,7 @@ export default class Objects {
 
   setDesk() {
     const setupTexture = this.textureLoader.load(
-      '/assets/textures/setupdlt.jpg'
+      '/assets/textures/SetupDLT.jpg'
     );
     setupTexture.flipY = false;
 
