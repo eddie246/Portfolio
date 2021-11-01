@@ -2,11 +2,11 @@
   "repository": "#",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --config ./bundler/webpack.prod.js",
+    "temp-build": "webpack --config ./bundler/webpack.prod.js",
     "start": "node server.js",
     "dev": "webpack serve --config ./bundler/webpack.dev.js",
     "examples": "webpack serve --config ./examples/webpack.config.js",
-    "example-build": "webpack --config ./examples/webpack.config.js"
+    "build": "webpack --config ./examples/webpack.config.js"
   },
   "dependencies": {
     "@babel/core": "^7.14.6",
