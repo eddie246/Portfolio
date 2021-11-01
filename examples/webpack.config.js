@@ -14,7 +14,11 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin({
-      patterns: [{ from: path.resolve(__dirname, '../examples/src/static') }],
+      patterns: [
+        {
+          from: path.resolve(__dirname, '../examples/src/static'),
+        },
+      ],
     }),
     new HtmlWebpackPlugin({
       template: './examples/src/index.html',

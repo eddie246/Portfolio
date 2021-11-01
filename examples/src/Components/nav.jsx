@@ -17,6 +17,7 @@ function Nav() {
         // marginRight: 'auto',
         // fontFamily: 'Arial, Helvetica, sans-serif',
         letterSpacing: '1px',
+        zIndex: 10000,
       }}
       id='nav'
     >

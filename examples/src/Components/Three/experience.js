@@ -3,8 +3,7 @@ import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 import { gsap } from 'gsap';
 
 import Objects from './objects';
-
-import * as dat from 'dat.gui';
+import Raycast from './raycaster.js';
 
 export default class Experience {
   constructor() {
@@ -13,7 +12,8 @@ export default class Experience {
     this.setRenderer();
     this.setControls();
 
-    this.objects = new Objects(this.scene, this.sceneCss);
+    this.raycast = new Raycast();
+    this.objects = new Objects(this.scene, this.sceneCss, this.raycast);
 
     window.addEventListener('resize', () => {
       // console.log(
@@ -39,13 +39,6 @@ export default class Experience {
     });
 
     this.setTick();
-    this.keyListener();
-  }
-
-  keyListener() {
-    window.addEventListener('keydown', (e) => {
-      console.log(e.code);
-    });
   }
 
   setScene() {
@@ -63,7 +56,6 @@ export default class Experience {
       100
     );
     this.camera.position.set(-1.27, 3.58, 2.29);
-    this.camera.layers.enable(1);
 
     this.camera.lookAt(new THREE.Vector3(0.06, 1.76, -0.8));
     this.scene.add(this.camera);
@@ -109,19 +101,14 @@ export default class Experience {
         z: -1.5 - e.clientY / window.outerHeight - 0.5,
         duration: 0.5,
       });
-
-      // this.objects.youtube.position.x =
-      //   -1.2 - e.clientX / window.outerWidth - 0.5;
-      // this.objects.youtube.position.z =
-      //   -0.7 - e.clientY / window.outerHeight - 0.5;
     });
   }
 
   setTick() {
-    const clock = new THREE.Clock();
+    // const clock = new THREE.Clock();
 
     const tick = () => {
-      const elapsedTime = clock.getElapsedTime();
+      // const elapsedTime = clock.getElapsedTime();
 
       // Render
       this.renderer.render(this.scene, this.camera);
@@ -134,6 +121,11 @@ export default class Experience {
       for (const item of this.objects.rotate) {
         item.rotation.z += 0.08;
       }
+
+      this.raycast.raycaster.setFromCamera(this.raycast.mouse, this.camera);
+      this.raycast.intersects = this.raycast.raycaster.intersectObjects(
+        this.raycast.objToDetect
+      );
 
       // Call tick again on the next frame
       window.requestAnimationFrame(tick);
